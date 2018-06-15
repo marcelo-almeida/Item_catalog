@@ -45,7 +45,7 @@ def get_item_list(category_name):
     ]
 
 
-def get_item(category_name, item_name):
+def get_especific_item(category_name, item_name):
     return {
         "cat_id": 1,
         "description": "test",
