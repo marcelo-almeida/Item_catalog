@@ -36,4 +36,4 @@ categories = [
 
 if __name__ == '__main__':
     add_category(categories)
-    print("Added all categories!")
+    print("Fill database!")

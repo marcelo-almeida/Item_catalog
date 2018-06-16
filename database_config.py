@@ -23,6 +23,16 @@ class Item(Base):
     description = Column(String(500), nullable=False)
     category_id = Column(Integer, ForeignKey('category.id'))
 
+    @property
+    def serialize(self):
+        """Return object to JSON format"""
+        return {
+            'title': self.title,
+            'description': self.description,
+            'id': self.id,
+            'cat_id': self.category_id
+        }
+
 
 class Category(Base):
     __tablename__ = 'category'
@@ -34,10 +44,19 @@ class Category(Base):
     user = relationship(User, foreign_keys=[user_id])
     item = relationship(Item, foreign_keys=[item_id])
 
+    @property
+    def serialize(self):
+        """Return object to JSON format"""
+        return {
+            'name': self.name,
+            'id': self.id,
+            'item': self.item
+        }
+
 
 engine = create_engine('sqlite:///catalog.db')
 
 
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
-    print("Created all databases")
+    print("Created all tables")
