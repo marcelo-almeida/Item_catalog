@@ -20,7 +20,7 @@ def get_catalog():
 @app.route('/catalog/JSON')
 def get_catalog_json():
     categories = get_category_list()
-    return jsonify(Category=[c.serialize for c in categories])
+    return jsonify(Category=[c.serialize_with_item for c in categories])
 
 
 @app.route('/catalog/<int:category_id>/items')
@@ -39,7 +39,7 @@ def get_items(category_id):
 @app.route('/catalog/<int:category_id>/items/JSON')
 def get_items_json(category_id):
     category = get_category_by_id(category_id)
-    return jsonify(Category=[category.serialize])
+    return jsonify(Category=[category.serialize_with_item])
 
 
 @app.route('/catalog/<int:category_id>/items/<int:item_id>')
@@ -47,6 +47,12 @@ def get_item(category_id, item_id):
     item = get_item_by_id(item_id)
     return render_template('item.html',
                            item=item)
+
+
+@app.route('/catalog/<int:category_id>/items/<int:item_id>/JSON')
+def get_item_json(category_id, item_id):
+    item = get_item_by_id(item_id)
+    return jsonify(Item=[item.serialize_with_category])
 
 
 @app.route('/catalog/<int:category_id>/items/<int:item_id>/edit',

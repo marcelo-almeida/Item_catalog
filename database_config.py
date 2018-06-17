@@ -22,6 +22,7 @@ class Item(Base):
     title = Column(String(255), nullable=False)
     description = Column(String(500))
     category_id = Column(Integer, ForeignKey('category.id'))
+    category = relationship("Category", back_populates="item")
 
     @property
     def serialize(self):
@@ -33,6 +34,19 @@ class Item(Base):
             'cat_id': self.category_id
         }
 
+    @property
+    def serialize_with_category(self):
+        return {
+            'title': self.title,
+            'description': self.description,
+            'id': self.id,
+            'category': self.serialize_one2one
+        }
+
+    @property
+    def serialize_one2one(self):
+        return self.category.serialize
+
 
 class Category(Base):
     __tablename__ = 'category'
@@ -42,12 +56,20 @@ class Category(Base):
     item = relationship(Item)
 
     @property
-    def serialize(self):
+    def serialize_with_item(self):
         """Return object to JSON format"""
         return {
             'name': self.name,
             'id': self.id,
             'item': self.serialize_one2many
+        }
+
+    @property
+    def serialize(self):
+        """Return object to JSON format"""
+        return {
+            'name': self.name,
+            'id': self.id
         }
 
     @property
