@@ -4,7 +4,8 @@
 		<a href="{{url_for('get_items', category_id=category.id )}}">{{category.name}}</a>
 	{% endfor %}
 	<a href="{{url_for('add_item')}}">Add Item</a>
+    <h4>Lastest Items</h4>
     {% for item in lastest_items %}
-		<h4>{{item.title}}</h4>
+	<a href="{{url_for('get_item', category_id=item.category_id, item_id=item.id)}}">{{item.title}}</a><span> (TODO)</span>
 	{% endfor %}
 {% endblock %}

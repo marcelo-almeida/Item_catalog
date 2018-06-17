@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
-from service import get_category_list, get_category_by_id, get_lastest_items, \
-    get_item_list, get_especific_item, count_items, add_new_item, \
-    edit_item_by_id, delete_item_by_id
+from service import get_category_list, get_category_by_id, \
+    get_item_list, get_item_by_id, count_items_by_category, \
+    add_new_item, edit_item_by_id, delete_item_by_id
 from database_config import Item
 
 app = Flask(__name__)
@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route('/catalog')
 def get_catalog():
     category_list = get_category_list()
-    lastest_items = get_lastest_items()
+    lastest_items = get_item_list(None, 9)
     return render_template('catalog.html',
                            category_list=category_list,
                            lastest_items=lastest_items)
@@ -21,8 +21,8 @@ def get_catalog():
 def get_items(category_id):
     category_list = get_category_list()
     category = get_category_by_id(category_id)
-    item_list = get_item_list(category_id)
-    count = count_items(category_id)
+    item_list = get_item_list(category_id, None)
+    count = count_items_by_category(category_id)
     return render_template('items.html',
                            category_list=category_list,
                            category=category,
@@ -32,7 +32,7 @@ def get_items(category_id):
 
 @app.route('/catalog/<int:category_id>/items/<int:item_id>')
 def get_item(category_id, item_id):
-    item = get_especific_item(item_id)
+    item = get_item_by_id(item_id)
     return render_template('item.html',
                            item=item)
 
@@ -40,7 +40,7 @@ def get_item(category_id, item_id):
 @app.route('/catalog/<int:category_id>/items/<int:item_id>/edit',
            methods=['GET', 'POST'])
 def edit_item(category_id, item_id):
-    item = get_especific_item(item_id)
+    item = get_item_by_id(item_id)
     if request.method == 'POST':
         item.title = request.form['title']
         item.description = request.form['description']
@@ -58,7 +58,7 @@ def edit_item(category_id, item_id):
 @app.route('/catalog/<int:category_id>/items/<int:item_id>/delete',
            methods=['GET', 'POST'])
 def delete_item(category_id, item_id):
-    item = get_especific_item(item_id)
+    item = get_item_by_id(item_id)
     if request.method == 'POST':
         delete_item_by_id(item)
         return redirect(url_for('get_items', category_id=category_id))

@@ -20,22 +20,20 @@ def get_category_by_id(category_id):
     return category
 
 
-def count_items(category_id):
+def count_items_by_category(category_id):
     count = session.query(Item).filter_by(category_id=category_id).count()
     return count
 
 
-def get_lastest_items():
-    items = session.query(Item).order_by(desc('id')).limit(9)
+def get_item_list(category_id, limit):
+    if limit:
+        items = session.query(Item).order_by(desc('id')).limit(limit)
+    else:
+        items = session.query(Item).filter_by(category_id=category_id).all()
     return items
 
 
-def get_item_list(category_id):
-    items = session.query(Item).filter_by(category_id=category_id).all()
-    return items
-
-
-def get_especific_item(item_id):
+def get_item_by_id(item_id):
     item = session.query(Item).filter_by(id=item_id).one()
     return item
 
