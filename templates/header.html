@@ -1,1 +1,9 @@
-<a href="{{url_for('get_catalog')}}">header here</a>
+<a href="{{url_for('get_catalog')}}">Catalog</a>
+
+{% if login == 'disconnected' %}
+<a href="{{url_for('show_login')}}">Log in</a>
+{% endif %}
+
+{% if login == 'connected' %}
+<a href="{{url_for('disconnect')}}">Log out</a>
+{% endif %}
