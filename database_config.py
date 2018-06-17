@@ -39,8 +39,7 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
-    item_id = Column(Integer, ForeignKey('item.id'))
-    item = relationship(Item, foreign_keys=[item_id])
+    item = relationship(Item)
 
     @property
     def serialize(self):
@@ -48,8 +47,12 @@ class Category(Base):
         return {
             'name': self.name,
             'id': self.id,
-            'item': self.item
+            'item': self.serialize_one2many
         }
+
+    @property
+    def serialize_one2many(self):
+        return [i.serialize for i in self.item]
 
 
 engine = create_engine('sqlite:///catalog.db')
