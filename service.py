@@ -48,3 +48,8 @@ def add_new_item(item):
 def edit_item_by_id(item):
     session.add(item)
     session.commit()
+
+
+def delete_item_by_id(item):
+    session.delete(item)
+    session.commit()

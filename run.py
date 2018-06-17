@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from service import get_category_list, get_category_by_id, get_lastest_items, \
-    get_item_list, get_especific_item, count_items, add_new_item, edit_item_by_id
+    get_item_list, get_especific_item, count_items, add_new_item, \
+    edit_item_by_id, delete_item_by_id
 from database_config import Item
 
 app = Flask(__name__)
@@ -54,10 +55,15 @@ def edit_item(category_id, item_id):
                            action_title="Edit Item")
 
 
-@app.route('/catalog/<int:category_id>/items/<int:item_id>/delete')
+@app.route('/catalog/<int:category_id>/items/<int:item_id>/delete',
+           methods=['GET', 'POST'])
 def delete_item(category_id, item_id):
     item = get_especific_item(item_id)
-    return "delete item"
+    if request.method == 'POST':
+        delete_item_by_id(item)
+        return redirect(url_for('get_items', category_id=category_id))
+    else:
+        return render_template('deleteitem.html', item=item)
 
 
 @app.route('/catalog/items/add', methods=['GET', 'POST'])
