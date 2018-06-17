@@ -8,11 +8,6 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-# Create default user
-user = User(name="bob", email="bob@fakemail.com")
-session.add(user)
-session.commit()
-
 
 def add_category(category_list):
     for category in category_list:
@@ -22,15 +17,15 @@ def add_category(category_list):
 
 # Create default categories
 categories = [
-    Category(user_id=1, name="Soccer"),
-    Category(user_id=1, name="Basketball"),
-    Category(user_id=1, name="Baseball"),
-    Category(user_id=1, name="Frisbee"),
-    Category(user_id=1, name="Snowboarding"),
-    Category(user_id=1, name="Rock Climbing"),
-    Category(user_id=1, name="Foosball"),
-    Category(user_id=1, name="Skating"),
-    Category(user_id=1, name="Hockey")
+    Category(name="Soccer"),
+    Category(name="Basketball"),
+    Category(name="Baseball"),
+    Category(name="Frisbee"),
+    Category(name="Snowboarding"),
+    Category(name="Rock Climbing"),
+    Category(name="Foosball"),
+    Category(name="Skating"),
+    Category(name="Hockey")
 ]
 
 

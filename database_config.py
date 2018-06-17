@@ -20,7 +20,7 @@ class Item(Base):
 
     id = Column(Integer, primary_key=True)
     title = Column(String(255), nullable=False)
-    description = Column(String(500), nullable=False)
+    description = Column(String(500))
     category_id = Column(Integer, ForeignKey('category.id'))
 
     @property
@@ -39,9 +39,7 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
-    user_id = Column(Integer, ForeignKey('user.id'))
     item_id = Column(Integer, ForeignKey('item.id'))
-    user = relationship(User, foreign_keys=[user_id])
     item = relationship(Item, foreign_keys=[item_id])
 
     @property
