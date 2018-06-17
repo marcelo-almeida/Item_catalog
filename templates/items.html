@@ -1,9 +1,10 @@
 {% extends "main.html" %}
 {% block content %}
-	{% for category in category_list %}
-		<h3>{{category.name}}</h3>
-	{% endfor %}
-    {% for item in item_list %}
-		<h4>{{item.title}}</h4>
-	{% endfor %}
+{% for cat in category_list %}
+    <a href="{{url_for('get_items', category_id=cat.id )}}">{{cat.name}}</a>
+{% endfor %}
+    <h4>{{category.name}} Items ({{count}} {% if count == 1 %}item{% endif %}{% if count != 1 %}items{% endif %})</h4>
+{% for item in item_list %}
+    <a href="{{url_for('get_item', category_id=category.id, item_id=item.id)}}">{{item.title}}</a>
+{% endfor %}
 {% endblock %}

@@ -1,54 +1,50 @@
+from sqlalchemy import create_engine, desc
+from sqlalchemy.orm import sessionmaker
+from database_config import Base, Category, Item
+
+engine = create_engine('sqlite:///catalog.db',
+                       connect_args={'check_same_thread': False})
+Base.metadata.bind = engine
+
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
+
+
 def get_category_list():
-    return [
-        {
-            "name": "soccer",
-            "id": 1
-        },
-        {
-            "name": "basketball",
-            "id": 2
-        }
-    ]
+    categories = session.query(Category).all()
+    return categories
+
+
+def get_category_by_id(category_id):
+    category = session.query(Category).filter_by(id=category_id).one()
+    return category
+
+
+def count_items(category_id):
+    count = session.query(Item).filter_by(category_id=category_id).count()
+    return count
 
 
 def get_lastest_items():
-    return [
-        {
-            "cat_id": 1,
-            "description": "test",
-            "id": 1,
-            "title": "jersey"
-        },
-        {
-            "cat_id": 1,
-            "description": "test2",
-            "id": 2,
-            "title": "jersey2"
-        }
-    ]
+    items = session.query(Item).order_by(desc('id')).limit(9)
+    return items
 
 
-def get_item_list(category_name):
-    return [
-        {
-            "cat_id": 1,
-            "description": "test",
-            "id": 3,
-            "title": "jersey100"
-        },
-        {
-            "cat_id": 1,
-            "description": "test2",
-            "id": 4,
-            "title": "jersey200"
-        }
-    ]
+def get_item_list(category_id):
+    items = session.query(Item).filter_by(category_id=category_id).all()
+    return items
 
 
-def get_especific_item(category_name, item_name):
-    return {
-        "cat_id": 1,
-        "description": "test",
-        "id": 3,
-        "title": "jersey100"
-    }
+def get_especific_item(item_id):
+    item = session.query(Item).filter_by(id=item_id).one()
+    return item
+
+
+def add_new_item(item):
+    session.add(item)
+    session.commit()
+
+
+def edit_item_by_id(item):
+    session.add(item)
+    session.commit()

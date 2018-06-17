@@ -1,8 +1,9 @@
 {% extends "main.html" %}
 {% block content %}
 	{% for category in category_list %}
-		<h3>{{category.name}}</h3>
+		<a href="{{url_for('get_items', category_id=category.id )}}">{{category.name}}</a>
 	{% endfor %}
+	<a href="{{url_for('add_item')}}">Add Item</a>
     {% for item in lastest_items %}
 		<h4>{{item.title}}</h4>
 	{% endfor %}
