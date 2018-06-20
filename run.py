@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for,\
+    jsonify, flash
 from flask import session as login_session
 from database_config import Item, Category
 from service import get_category_list, get_category_by_id, \
@@ -8,6 +9,7 @@ from authorization_service import get_state, validate_user, try_disconnect
 import requests
 
 app = Flask(__name__)
+app.config["CACHE_TYPE"] = 'null'
 
 
 @app.route('/')
@@ -89,6 +91,7 @@ def edit_item(category_id, item_id):
         item.description = request.form['description']
         item.category_id = request.form['category']
         edit_item_by_id(item)
+        flash('Item %s Successfully Updated' % item.title)
         return redirect(url_for('get_item', category_id=category_id,
                                 item_id=item.id))
     else:
@@ -107,6 +110,7 @@ def delete_item(category_id, item_id):
     item = get_item_by_id(item_id)
     if request.method == 'POST':
         delete_item_by_id(item)
+        flash('Item %s Successfully Deleted' % item.title)
         return redirect(url_for('get_items', category_id=category_id))
     else:
         return render_template('deleteitem.html', item=item, login="connected")
@@ -121,6 +125,7 @@ def add_item():
                     description=request.form['description'],
                     category_id=request.form['category'])
         add_new_item(item)
+        flash('New Item %s Successfully Created' % item.title)
         return redirect(url_for('get_catalog'))
     else:
         category_list = get_category_list()
@@ -138,6 +143,7 @@ def show_login():
                                    STATE=state,
                                    login="disconnected")
     else:
+        print('fail')
         response = redirect(url_for('get_catalog'))
     return response
 
@@ -151,9 +157,17 @@ def connect():
 @app.route('/disconnect')
 def disconnect():
     response = try_disconnect()
+    print('oioioioi' + str(response) + login_session['username'])
     if '200' not in str(response):
         return response
     else:
+        # Reset the user's session.
+        del login_session['access_token']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        flash('Logout with success!')
         return redirect(url_for('get_catalog'))
 
 
