@@ -1,5 +1,16 @@
 {% extends "main.html" %}
 {% block content %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{message}}
+            </div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endwith %}
 <div class="card offset-md-2 card-align">
   <div class="card-header">
     <h3 class="card-title">{{item.title}}</h3>

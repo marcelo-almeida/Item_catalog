@@ -1,5 +1,16 @@
 {% extends "main.html" %}
 {% block content %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{message}}
+            </div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endwith %}
 <div class="col-12 columns-align">
     <div class="col-2">
         <ul class="list-group">

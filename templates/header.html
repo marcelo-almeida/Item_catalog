@@ -8,16 +8,5 @@
         <a class="btn btn-outline-primary" href="{{url_for('disconnect')}}" >Logout</a>
     {% endif %}
 </nav>
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul>
-        {% for message in messages %}
-            <div class="alert alert-success" role="alert">
-                {{message}}
-            </div>
-        {% endfor %}
-    </ul>
-    {% endif %}
-{% endwith %}
 
 

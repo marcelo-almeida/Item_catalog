@@ -51,3 +51,12 @@ def edit_item_by_id(item):
 def delete_item_by_id(item):
     session.delete(item)
     session.commit()
+
+
+def validate_item(item):
+    errors = []
+    if not item.title or item.title == '':
+        errors.append('invalid title')
+    if not item.category_id or item.category_id <= 0:
+        errors.append('invalid category')
+    return errors

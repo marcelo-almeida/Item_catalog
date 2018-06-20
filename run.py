@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for,\
+from flask import Flask, render_template, request, redirect, url_for, \
     jsonify, flash
 from flask import session as login_session
-from database_config import Item, Category
+from database_config import Item
 from service import get_category_list, get_category_by_id, \
     get_item_list, get_item_by_id, count_items_by_category, \
-    add_new_item, edit_item_by_id, delete_item_by_id
+    add_new_item, edit_item_by_id, delete_item_by_id, validate_item
 from authorization_service import get_state, validate_user, try_disconnect
 import requests
 
@@ -90,10 +90,18 @@ def edit_item(category_id, item_id):
         item.title = request.form['title']
         item.description = request.form['description']
         item.category_id = request.form['category']
-        edit_item_by_id(item)
-        flash('Item %s Successfully Updated' % item.title)
-        return redirect(url_for('get_item', category_id=category_id,
-                                item_id=item.id))
+        errors = validate_item(item)
+        if not errors:
+            edit_item_by_id(item)
+            flash('Item %s Successfully Updated' % item.title)
+            return redirect(url_for('get_item', category_id=category_id,
+                                    item_id=item.id))
+        else:
+            for error in errors:
+                flash(error)
+            return redirect(url_for('edit_item',
+                            category_id=category_id,
+                            item_id=item.id))
     else:
         category_list = get_category_list()
     return render_template('form.html', category_list=category_list,
@@ -124,9 +132,15 @@ def add_item():
         item = Item(title=request.form['title'],
                     description=request.form['description'],
                     category_id=request.form['category'])
-        add_new_item(item)
-        flash('New Item %s Successfully Created' % item.title)
-        return redirect(url_for('get_catalog'))
+        errors = validate_item(item)
+        if not errors:
+            add_new_item(item)
+            flash('New Item %s Successfully Created' % item.title)
+            return redirect(url_for('get_catalog'))
+        else:
+            for error in errors:
+                flash(error)
+            return redirect(url_for('add_item'))
     else:
         category_list = get_category_list()
         return render_template('form.html', category_list=category_list,
@@ -157,7 +171,6 @@ def connect():
 @app.route('/disconnect')
 def disconnect():
     response = try_disconnect()
-    print('oioioioi' + str(response) + login_session['username'])
     if '200' not in str(response):
         return response
     else:
@@ -167,7 +180,6 @@ def disconnect():
         del login_session['username']
         del login_session['email']
         del login_session['picture']
-        flash('Logout with success!')
         return redirect(url_for('get_catalog'))
 
 
