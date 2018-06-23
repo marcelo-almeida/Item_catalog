@@ -32,7 +32,7 @@ through the web browser.
 
 * Create an account in google developers
 
-    [https://console.developers.google.com/apis]
+    https://console.developers.google.com/apis
 
 * Create a new OAuth client ID: when you creating, please define a name to client,
 fill the field `Authorized Javacript origins` with `http://localhost:8080` and
@@ -44,18 +44,20 @@ the field `Authorized redirect URIs` with:
 
   `http://localhost:8080/disconnect`
 
-note: Don't forget is one per line
+  note: Don't forget is one per line
 * Download you client secret by clicking in `DOWNLOAD JSON` in your google developers account.
 * Rename the file to `client_secrets.json` and replace the same file in this project.
 * Copy the project to vagrant directory
 * init a new vagrant session `vagrant ssh` in a terminal
 * From a vagrant terminal execute these command to create the database and fill
 with categories:
+
   `python database_config.py`
 
   `python fill_database.py`
 
 * Again from a vagrant terminal execute this command to init a server http:
+
   `python run.py`
 
 * Access in a web browser `http://localhost:8080` to interact with the catalog
@@ -65,4 +67,5 @@ It was used the vagrant config from udacity repository
   [fullstack-nanodegree-vm](https://github.com/udacity/fullstack-nanodegree-vm)
 
 For the OAuth2/google logic is based in udacity's material:
+
   [OAuth2](https://github.com/udacity/OAuth2.0)
