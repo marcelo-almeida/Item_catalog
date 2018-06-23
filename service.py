@@ -11,21 +11,37 @@ session = DBSession()
 
 
 def get_category_list():
+    """
+    :return: all categories
+    """
     categories = session.query(Category).all()
     return categories
 
 
 def get_category_by_id(category_id):
+    """
+    :param category_id: id of a category
+    :return: a specific category
+    """
     category = session.query(Category).filter_by(id=category_id).one()
     return category
 
 
 def count_items_by_category(category_id):
+    """
+    :param category_id: id of a category
+    :return: quantity of items filter by category
+    """
     count = session.query(Item).filter_by(category_id=category_id).count()
     return count
 
 
 def get_item_list(category_id, limit):
+    """
+    :param category_id: id of a category
+    :param limit: limit of returned items
+    :return: items
+    """
     if limit:
         items = session.query(Item).order_by(desc('id')).limit(limit)
     else:
@@ -34,26 +50,46 @@ def get_item_list(category_id, limit):
 
 
 def get_item_by_id(item_id):
+    """
+    :param item_id: id of a item
+    :return: a specific item
+    """
     item = session.query(Item).filter_by(id=item_id).one()
     return item
 
 
 def add_new_item(item):
+    """
+    :param item: item to create
+    :return: None
+    """
     session.add(item)
     session.commit()
 
 
 def edit_item_by_id(item):
+    """
+    :param item: item to update
+    :return: None
+    """
     session.add(item)
     session.commit()
 
 
 def delete_item_by_id(item):
+    """
+    :param item: item to delete
+    :return: None
+    """
     session.delete(item)
     session.commit()
 
 
 def validate_item(item):
+    """
+    :param item: item to validate
+    :return: None
+    """
     errors = []
     if not item.title or item.title == '':
         errors.append('invalid title')
