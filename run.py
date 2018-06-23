@@ -5,7 +5,8 @@ from database_config import Item
 from service import get_category_list, get_category_by_id, \
     get_item_list, get_item_by_id, count_items_by_category, \
     add_new_item, edit_item_by_id, delete_item_by_id, validate_item
-from authorization_service import get_state, validate_user, try_disconnect
+from authorization_service import get_state, validate_user, \
+    try_disconnect, CLIENT_ID
 import requests
 
 app = Flask(__name__)
@@ -154,7 +155,8 @@ def show_login():
     if 'username' not in login_session:
         response = render_template('login.html',
                                    STATE=state,
-                                   login="disconnected")
+                                   login="disconnected",
+                                   client_id=CLIENT_ID)
     else:
         print('fail')
         response = redirect(url_for('get_catalog'))
