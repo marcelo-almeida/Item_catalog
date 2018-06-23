@@ -1,0 +1,40 @@
+{% extends "main.html" %}
+{% block content %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{message}}
+            </div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endwith %}
+<div class="col-12 columns-align">
+    <div class="col-2">
+        <ul class="list-group">
+            {% for category in category_list %}
+            <a class="list-group-item list-group-item-action"
+               href="{{url_for('get_items', category_id=category.id )}}">{{category.name}}</a>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-10 background-items">
+        <div class="container">
+            <a class="btn btn-primary btn-sm margin-bottom-align margin-top-align"
+               href="{{url_for('add_item')}}">Add Item</a>
+            <h4 class="margin-bottom-align">Lastest Items</h4>
+            <ul>
+                {% for item in lastest_items %}
+                <li>
+                    <a class="link-font" href="{{url_for('get_item', category_id=item.category_id, item_id=item.id)}}">{{item.title}}</a>
+                    <span class="span-color"> ({{item.category.name}})</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

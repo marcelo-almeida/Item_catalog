@@ -1,0 +1,24 @@
+{% extends "main.html" %}
+{% block content %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{message}}
+            </div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endwith %}
+<div class="card offset-md-2 card-align">
+  <div class="card-header">
+    <h3 class="card-title">{{item.title}}</h3>
+  </div>
+  <div class="card-body">
+    <p class="card-text">{{item.description}}</p>
+    <a class="card-link btn btn-success button-align" href="{{url_for('edit_item', category_id=item.category_id, item_id=item.id)}}">edit</a>
+    <a class="card-link btn btn-danger button-align" href="{{url_for('delete_item', category_id=item.category_id, item_id=item.id)}}">delete</a>
+  </div>
+</div>
+{% endblock %}
