@@ -138,7 +138,6 @@ def add_item():
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        print(str(login_session))
         user = get_user_by_id(login_session['user_id'])
         item = Item(title=request.form['title'],
                     description=request.form['description'],
