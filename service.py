@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
-from database_config import Base, Category, Item
+from database_config import Base, Category, Item, User
 
 engine = create_engine('sqlite:///catalog.db',
                        connect_args={'check_same_thread': False})
@@ -96,3 +96,37 @@ def validate_item(item):
     if not item.category_id or item.category_id <= 0:
         errors.append('invalid category')
     return errors
+
+
+def create_user(login_session):
+    """
+    :param login_session: dict with login session
+    :return: return id of the user created
+    """
+    new_user = User(name=login_session['username'],
+                    email=login_session['email'])
+    session.add(new_user)
+    session.commit()
+    user = session.query(User).filter_by(email=login_session['email']).one()
+    return user
+
+
+def get_user_by_id(user_id):
+    """
+    :param user_id: id of the user
+    :return: a specific user
+    """
+    user = session.query(User).filter_by(id=user_id).one()
+    return user
+
+
+def get_user_by_email(email):
+    """
+    :param email: email from an user
+    :return: a specific user
+    """
+    try:
+        user = session.query(User).filter_by(email=email).one()
+        return user
+    except:
+        return None

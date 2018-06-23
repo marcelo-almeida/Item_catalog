@@ -4,6 +4,7 @@ import httplib2
 import json
 from flask import session as login_session
 from flask import make_response, render_template, flash
+from service import create_user, get_user_by_email, get_user_by_id
 import random
 import string
 
@@ -92,6 +93,12 @@ def validate_user(request, requests):
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
+    # See if a user exists, if it doesn't make a new one
+
+    user = get_user_by_email(login_session['email'])
+    if not user or not user.id:
+        user = create_user(login_session)
+    login_session['user_id'] = user.id
     return render_template('logged.html', username=login_session['username'],
                            picture_url=login_session['picture'])
 

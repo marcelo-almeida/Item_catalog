@@ -6,6 +6,14 @@ from sqlalchemy import create_engine
 Base = declarative_base()
 
 
+class User(Base):
+    __tablename__ = 'user'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255), nullable=False)
+    email = Column(String(255), nullable=False)
+
+
 class Item(Base):
     __tablename__ = 'item'
 
@@ -13,6 +21,7 @@ class Item(Base):
     title = Column(String(255), nullable=False)
     description = Column(String(500))
     category_id = Column(Integer, ForeignKey('category.id'))
+    user_id = Column(Integer, ForeignKey('user.id'))
     category = relationship("Category", back_populates="item")
 
     @property
