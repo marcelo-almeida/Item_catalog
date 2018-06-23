@@ -6,15 +6,6 @@ from sqlalchemy import create_engine
 Base = declarative_base()
 
 
-class User(Base):
-    __tablename__ = 'user'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(255), nullable=False)
-    email = Column(String(255), nullable=False)
-    picture = Column(String(255))
-
-
 class Item(Base):
     __tablename__ = 'item'
 
@@ -78,7 +69,6 @@ class Category(Base):
 
 
 engine = create_engine('sqlite:///catalog.db')
-
 
 if __name__ == '__main__':
     Base.metadata.create_all(engine)

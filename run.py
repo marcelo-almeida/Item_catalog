@@ -9,7 +9,6 @@ from authorization_service import get_state, validate_user, try_disconnect
 import requests
 
 app = Flask(__name__)
-app.config["CACHE_TYPE"] = 'null'
 
 
 @app.route('/')
@@ -100,8 +99,8 @@ def edit_item(category_id, item_id):
             for error in errors:
                 flash(error)
             return redirect(url_for('edit_item',
-                            category_id=category_id,
-                            item_id=item.id))
+                                    category_id=category_id,
+                                    item_id=item.id))
     else:
         category_list = get_category_list()
     return render_template('form.html', category_list=category_list,
@@ -184,6 +183,6 @@ def disconnect():
 
 
 if __name__ == '__main__':
-    app.secret_key = 'super_secret_key'
+    app.secret_key = 'my_super_secret_key'
     app.debug = True
     app.run(host='0.0.0.0', port=8000)

@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from database_config import Category, Base, User
+from database_config import Category, Base
 
 engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
@@ -15,20 +15,18 @@ def add_category(category_list):
         session.commit()
 
 
-# Create default categories
-categories = [
-    Category(name="Soccer"),
-    Category(name="Basketball"),
-    Category(name="Baseball"),
-    Category(name="Frisbee"),
-    Category(name="Snowboarding"),
-    Category(name="Rock Climbing"),
-    Category(name="Foosball"),
-    Category(name="Skating"),
-    Category(name="Hockey")
-]
-
-
 if __name__ == '__main__':
+    # Create default categories
+    categories = [
+        Category(name="Soccer"),
+        Category(name="Basketball"),
+        Category(name="Baseball"),
+        Category(name="Frisbee"),
+        Category(name="Snowboarding"),
+        Category(name="Rock Climbing"),
+        Category(name="Foosball"),
+        Category(name="Skating"),
+        Category(name="Hockey")
+    ]
     add_category(categories)
     print("Fill database!")
