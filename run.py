@@ -3,9 +3,10 @@ from flask import Flask, render_template, request, redirect, url_for, \
 from flask import session as login_session
 from database_config import Item
 from service import get_category_list, get_category_by_id, \
-    get_item_list, get_item_by_id, count_items_by_category, \
-    add_new_item, edit_item_by_id, delete_item_by_id, validate_item
-from authorization_service import get_state, validate_user, try_disconnect
+    get_item_list, get_item_by_id, count_items_by_category, add_new_item,\
+    edit_item_by_id, delete_item_by_id, validate_item, get_user_by_id
+from authorization_service import CLIENT_ID, get_state, validate_user, \
+    try_disconnect
 import requests
 
 app = Flask(__name__)
@@ -62,7 +63,8 @@ def get_items_json(category_id):
 @app.route('/catalog/<int:category_id>/items/<int:item_id>')
 def get_item(category_id, item_id):
     item = get_item_by_id(item_id)
-    if 'username' not in login_session:
+    user = get_user_by_id(item.user_id)
+    if 'username' not in login_session or user.id != login_session['user_id']:
         template = render_template('publicitem.html',
                                    item=item,
                                    login="disconnected")
@@ -86,21 +88,25 @@ def edit_item(category_id, item_id):
         return redirect('/login')
     item = get_item_by_id(item_id)
     if request.method == 'POST':
-        item.title = request.form['title']
-        item.description = request.form['description']
-        item.category_id = request.form['category']
-        errors = validate_item(item)
-        if not errors:
-            edit_item_by_id(item)
-            flash('Item %s Successfully Updated' % item.title)
-            return redirect(url_for('get_item', category_id=category_id,
-                                    item_id=item.id))
+        user = get_user_by_id(item.user_id)
+        if user.id == login_session['user_id']:
+            item.title = request.form['title']
+            item.description = request.form['description']
+            item.category_id = request.form['category']
+            errors = validate_item(item)
+            if not errors:
+                edit_item_by_id(item)
+                flash('Item %s Successfully Updated' % item.title)
+                return redirect(url_for('get_item', category_id=category_id,
+                                        item_id=item.id))
+            else:
+                for error in errors:
+                    flash(error)
+                return redirect(url_for('edit_item',
+                                        category_id=category_id,
+                                        item_id=item.id))
         else:
-            for error in errors:
-                flash(error)
-            return redirect(url_for('edit_item',
-                                    category_id=category_id,
-                                    item_id=item.id))
+            return redirect(url_for('get_catalog'))
     else:
         category_list = get_category_list()
     return render_template('form.html', category_list=category_list,
@@ -116,9 +122,13 @@ def delete_item(category_id, item_id):
         return redirect('/login')
     item = get_item_by_id(item_id)
     if request.method == 'POST':
-        delete_item_by_id(item)
-        flash('Item %s Successfully Deleted' % item.title)
-        return redirect(url_for('get_items', category_id=category_id))
+        user = get_user_by_id(item.user_id)
+        if user.id == login_session['user_id']:
+            delete_item_by_id(item)
+            flash('Item %s Successfully Deleted' % item.title)
+            return redirect(url_for('get_items', category_id=category_id))
+        else:
+            return redirect(url_for('get_catalog'))
     else:
         return render_template('deleteitem.html', item=item, login="connected")
 
@@ -128,9 +138,11 @@ def add_item():
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
+        user = get_user_by_id(login_session['user_id'])
         item = Item(title=request.form['title'],
                     description=request.form['description'],
-                    category_id=request.form['category'])
+                    category_id=request.form['category'],
+                    user_id=user.id)
         errors = validate_item(item)
         if not errors:
             add_new_item(item)
@@ -154,7 +166,8 @@ def show_login():
     if 'username' not in login_session:
         response = render_template('login.html',
                                    STATE=state,
-                                   login="disconnected")
+                                   login="disconnected",
+                                   client_id=CLIENT_ID)
     else:
         print('fail')
         response = redirect(url_for('get_catalog'))
@@ -178,6 +191,7 @@ def disconnect():
         del login_session['gplus_id']
         del login_session['username']
         del login_session['email']
+        del login_session['user_id']
         del login_session['picture']
         return redirect(url_for('get_catalog'))
 
