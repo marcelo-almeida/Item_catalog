@@ -38,11 +38,11 @@ through the web browser.
 fill the field `Authorized Javacript origins` with `http://localhost:8080` and
 the field `Authorized redirect URIs` with:
 
-  `http://localhost:8080/login`
+  `http://localhost:8000/login`
 
-  `http://localhost:8080/connect`
+  `http://localhost:8000/connect`
 
-  `http://localhost:8080/disconnect`
+  `http://localhost:8000/disconnect`
 
   note: Don't forget is one per line
 * Download you client secret by clicking in `DOWNLOAD JSON` in your google developers account.
@@ -60,7 +60,7 @@ with categories:
 
   `python run.py`
 
-* Access in a web browser `http://localhost:8080` to interact with the catalog
+* Access in a web browser `http://localhost:8000` to interact with the catalog
 ## Copyright
 It was used the vagrant config from udacity repository
 
