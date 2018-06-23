@@ -12,6 +12,7 @@ CLIENT_ID = json.loads(
 
 
 def get_state():
+    # get state token
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
@@ -96,6 +97,7 @@ def validate_user(request, requests):
 
 
 def try_disconnect():
+    # try disconnect a user from session
     access_token = login_session.get('access_token')
     if access_token is None:
         response = make_response(

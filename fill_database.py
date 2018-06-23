@@ -10,6 +10,7 @@ session = DBSession()
 
 
 def add_category(category_list):
+    # create all categories
     for category in category_list:
         session.add(category)
         session.commit()
