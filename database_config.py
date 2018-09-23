@@ -77,7 +77,7 @@ class Category(Base):
         return [i.serialize for i in self.item]
 
 
-engine = create_engine('sqlite:///catalog.db')
+engine = create_engine('postgresql://postgres:postgres@172.26.13.204/catalog')
 
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
